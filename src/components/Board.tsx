@@ -1,12 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import CheckBox from "./SvgIcons/CheckBox";
-import CheckBoxBlank from "./SvgIcons/CheckBoxBlank";
-import MenuIcon from "./SvgIcons/MenuIcon";
-import AddTodos from "./AddTodos";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { Categories, categoryState, toDoSelector, toDoState } from "./atoms";
-import Todo from "./Task";
+import AddTask from "./AddTask";
+import Task from "./Task";
+import { kanbanState } from "./atoms";
+import { useRecoilValue } from "recoil";
 
 const TodoLayout = styled.section`
   display: "flex";
@@ -14,17 +11,17 @@ const TodoLayout = styled.section`
   align-items: start;
   justify-content: space-around;
   width: 100%;
-  max-width: 65rem;
-  margin-top: 8rem;
+  width: 30rem;
   border-radius: 0.75rem;
   background-color: #e2e8f0;
+  margin:0rem 3rem 0rem 3rem;
   filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07))
     drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
 `;
 
 const TodoHeader = styled.header`
   width: 100%;
-  height: 9rem;
+  height: 6rem;
   display: flex;
   padding: 0.5rem 0rem;
   flex-direction: column;
@@ -38,42 +35,7 @@ const HeaderTitle = styled.h1`
   color: white;
   font-weight: 800;
   font-size: xx-large;
-`;
-
-const TodoFilter = styled.section`
-  width: 100%;
-  height: 5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  &:checked {
-    border-bottom: solid;
-    border-bottom-color: #4aa77d;
-    border-bottom-width: large;
-  }
-`;
-
-const IconContainer = styled.div`
-  width: 4rem;
-  height: 4rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const TodoFilterSelector = styled.div`
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const SelectorTitle = styled.h6`
-  color: white;
-  font-size: large;
-  font-weight: 700;
-  text-transform: capitalize;
+  text-transform: uppercase;
 `;
 
 const TodoMain = styled.main`
@@ -104,38 +66,32 @@ const TodoFooter = styled.section`
   border-top-width: thin;
 `;
 
-const Board: React.FC = () => {
-  const toDos = useRecoilValue(toDoSelector);
-  const [category, setCategory] = useRecoilState(categoryState);
+interface IBoardProps {
+  categoryName: string;
+  categoryIndex: number;
+}
 
+
+const Board: React.FC<IBoardProps> = ({categoryName, categoryIndex}) => {
+  const taskList = useRecoilValue(kanbanState)
+  const targetList = taskList.filter((taskList) => taskList.category.categoryIndex === categoryIndex)
   return (
     <TodoLayout>
       <TodoHeader>
-        <HeaderTitle>Todo List</HeaderTitle>
-        <TodoFilter>
-          <TodoFilterSelector>
-            <SelectorTitle>todo</SelectorTitle>
-          </TodoFilterSelector>
-          <TodoFilterSelector>
-            <SelectorTitle>doing</SelectorTitle>
-          </TodoFilterSelector>
-          <TodoFilterSelector>
-            <SelectorTitle>Completed</SelectorTitle>
-          </TodoFilterSelector>
-        </TodoFilter>
+        <HeaderTitle>{categoryName}</HeaderTitle>
       </TodoHeader>
       <TodoMain>
         <TodoListContainer>
-          {toDos.length > 0 &&
-            toDos.map((toDo) => {
+          {targetList.length > 0 &&
+            targetList.map((target) => {
               return (
-                <Todo task={toDo.task} id={toDo.id} category={toDo.category} />
+                <Task task={target.task} id={target.id} category={target.category} />
               );
             })}
         </TodoListContainer>
       </TodoMain>
       <TodoFooter>
-        <AddTodos />
+        <AddTask categoryName={categoryName} categoryIndex={categoryIndex} />
       </TodoFooter>
     </TodoLayout>
   );

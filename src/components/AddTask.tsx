@@ -1,12 +1,8 @@
 import { useForm } from "react-hook-form";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { categoryState, toDoState } from "./atoms";
+import { useSetRecoilState } from "recoil";
 import { styled } from "styled-components";
 import AddIcon from "./SvgIcons/AddIcon";
-
-interface IForm {
-  toDo: string;
-}
+import { kanbanState } from "./atoms";
 
 const FormContainer = styled.section`
   width: 100%;
@@ -22,7 +18,7 @@ const Form = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
-`; 
+`;
 
 const FormInput = styled.input`
   width: 100%;
@@ -37,35 +33,48 @@ const ButtonContainer = styled.button`
   border-color: transparent;
   background-color: transparent;
   width: 5rem;
-  height:  5rem;
-  &:hover{
-    background-color: #DCDCDC;
+  height: 5rem;
+  &:hover {
+    background-color: #dcdcdc;
   }
-`
+`;
 
-const AddTodos: React.FC = () => {
-  const setToDos = useSetRecoilState(toDoState);
-  const category = useRecoilValue(categoryState);
-  const { register, handleSubmit, setValue } = useForm<IForm>();
+interface IAddTaskProps {
+  categoryName: string;
+  categoryIndex: number;
+}
 
-  const handleValid = ({ toDo }: IForm) => {
-    setToDos((oldToDos) => [
-      { task: toDo, id: crypto.randomUUID(), category },
-      ...oldToDos,
+interface ITask {
+  task: string;
+}
+
+const AddTasks: React.FC<IAddTaskProps> = ({ categoryName, categoryIndex }) => {
+  const setTasks = useSetRecoilState(kanbanState);
+  const { register, handleSubmit, setValue } = useForm<ITask>();
+
+  const handleValid = ({ task }: ITask) => {
+    setTasks((oldTasks) => [
+      {
+        task: task,
+        id: crypto.randomUUID(),
+        category: {
+          categoryName,
+          categoryIndex,
+        },
+      },
+      ...oldTasks,
     ]);
-    setValue("toDo", "");
+    setValue("task", "");
   };
-
-
 
   return (
     <FormContainer>
       <Form onSubmit={handleSubmit(handleValid)}>
         <FormInput
-          {...register("toDo", {
-            required: "Please write a To Do",
+          {...register("task", {
+            required: "Please write a Task",
           })}
-          placeholder="Write a to do"
+          placeholder="Write a Task"
         />
         <ButtonContainer type="submit">
           <AddIcon />
@@ -75,4 +84,4 @@ const AddTodos: React.FC = () => {
   );
 };
 
-export default AddTodos;
+export default AddTasks;

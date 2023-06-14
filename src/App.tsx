@@ -1,5 +1,5 @@
 import { createGlobalStyle, styled } from "styled-components";
-import Board from "./components/Board";
+import Boards from "./components/Boards";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400&display=swap');
@@ -80,7 +80,7 @@ const Centered = styled.div`
   left: 50%;
   transform: translateX(-50%);
   height: 100vh;
-  position: absolute;
+  position: relative;
   margin: 0;
 `;
 
@@ -89,7 +89,7 @@ function App() {
     <>
       <GlobalStyle />
       <Centered>
-        <Board />
+        <Boards />
       </Centered>
     </>
   );

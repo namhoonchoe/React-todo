@@ -4,8 +4,8 @@ import CheckBoxBlank from "./SvgIcons/CheckBoxBlank";
 import EditIcon from "./SvgIcons/EditIcon";
 import SaveIcon from "./SvgIcons/SaveIcon";
 import DeleteIcon from "./SvgIcons/DeleteIcon";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { categoryState, toDoState, Categories, IToDo } from "./atoms";
+import { useRecoilState } from "recoil";
+import { TCategory, kanbanState } from "./atoms";
 
 const CardLayout = styled.section`
   display: flex;
@@ -73,27 +73,33 @@ const ButtonContainer = styled.button`
   }
 `;
 
-const Task: React.FC<IToDo> = ({ id, task, category }) => {
+interface ITodo {
+  id: string;
+  task: string;
+  category: TCategory;
+}
+
+const Task: React.FC<ITodo> = ({ id, task, category }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTask, setNewTask] = useState<string>("");
-  const [todoState, setTodoState] = useRecoilState(toDoState);
+  const [taskList, setTaskList] = useRecoilState(kanbanState);
 
   const editTodo = (id: string) => {
-    let targetTodo = todoState.find((todo) => todo.id === id);
-    const targetIndex = todoState.findIndex((todo) => todo.id === id);
+    let targetTodo = taskList.find((task) => task.id === id);
+    const targetIndex = taskList.findIndex((task) => task.id === id);
     if (targetTodo) {
       targetTodo = { ...targetTodo, task: newTask };
-      return setTodoState([
-        ...todoState.slice(0, targetIndex),
+      return setTaskList([
+        ...taskList.slice(0, targetIndex),
         targetTodo,
-        ...todoState.slice(targetIndex + 1),
+        ...taskList.slice(targetIndex + 1),
       ]);
     }
   };
 
   const deleteTodo = (id: string) => {
-    const newList = todoState.filter((todoState) => todoState.id !== id);
-    setTodoState(newList);
+    const newList = taskList.filter((task) => task.id !== id);
+    setTaskList(newList);
   };
 
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +125,7 @@ const Task: React.FC<IToDo> = ({ id, task, category }) => {
       {isEditing ? (
         <EditFormContainer>
           <EditForm onSubmit={submitHandler}>
-            <EditInput type="text" onChange={changeHandler}/>
+            <EditInput type="text" onChange={changeHandler} />
             <ButtonContainer type="submit">
               <SaveIcon />
             </ButtonContainer>
