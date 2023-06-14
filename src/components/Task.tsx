@@ -73,7 +73,7 @@ const ButtonContainer = styled.button`
   }
 `;
 
-const Todo: React.FC<IToDo> = ({ id, task, category }) => {
+const Task: React.FC<IToDo> = ({ id, task, category }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTask, setNewTask] = useState<string>("");
   const [todoState, setTodoState] = useRecoilState(toDoState);
@@ -102,7 +102,10 @@ const Todo: React.FC<IToDo> = ({ id, task, category }) => {
   };
 
   const editHandler = () => {
-    editTodo(id);
+    if (newTask !== "") {
+      editTodo(id);
+      setIsEditing(false);
+    }
     setIsEditing(false);
   };
 
@@ -116,7 +119,7 @@ const Todo: React.FC<IToDo> = ({ id, task, category }) => {
       {isEditing ? (
         <EditFormContainer>
           <EditForm onSubmit={submitHandler}>
-            <EditInput type="text" onChange={changeHandler} />
+            <EditInput type="text" onChange={changeHandler}/>
             <ButtonContainer type="submit">
               <SaveIcon />
             </ButtonContainer>
@@ -142,4 +145,4 @@ const Todo: React.FC<IToDo> = ({ id, task, category }) => {
   );
 };
 
-export default Todo;
+export default Task;

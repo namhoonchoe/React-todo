@@ -6,7 +6,7 @@ import MenuIcon from "./SvgIcons/MenuIcon";
 import AddTodos from "./AddTodos";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Categories, categoryState, toDoSelector, toDoState } from "./atoms";
-import Todo from "./Todo";
+import Todo from "./Task";
 
 const TodoLayout = styled.section`
   display: "flex";
@@ -26,7 +26,7 @@ const TodoHeader = styled.header`
   width: 100%;
   height: 9rem;
   display: flex;
-  padding:0.5rem 0rem ;
+  padding: 0.5rem 0rem;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -104,7 +104,7 @@ const TodoFooter = styled.section`
   border-top-width: thin;
 `;
 
-const TodoList: React.FC = () => {
+const Board: React.FC = () => {
   const toDos = useRecoilValue(toDoSelector);
   const [category, setCategory] = useRecoilState(categoryState);
 
@@ -114,21 +114,12 @@ const TodoList: React.FC = () => {
         <HeaderTitle>Todo List</HeaderTitle>
         <TodoFilter>
           <TodoFilterSelector>
-            <IconContainer>
-              <MenuIcon />
-            </IconContainer>
             <SelectorTitle>todo</SelectorTitle>
           </TodoFilterSelector>
           <TodoFilterSelector>
-            <IconContainer>
-              <CheckBoxBlank />
-            </IconContainer>
             <SelectorTitle>doing</SelectorTitle>
           </TodoFilterSelector>
           <TodoFilterSelector>
-            <IconContainer>
-              <CheckBox />
-            </IconContainer>
             <SelectorTitle>Completed</SelectorTitle>
           </TodoFilterSelector>
         </TodoFilter>
@@ -150,4 +141,4 @@ const TodoList: React.FC = () => {
   );
 };
 
-export default TodoList;
+export default Board;
