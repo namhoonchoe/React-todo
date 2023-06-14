@@ -79,7 +79,7 @@ interface ITodo {
   category: TCategory;
 }
 
-const Task: React.FC<ITodo> = ({ id, task, category }) => {
+const Task: React.FC<ITodo> = ({ id, task }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newTask, setNewTask] = useState<string>("");
   const [taskList, setTaskList] = useRecoilState(kanbanState);

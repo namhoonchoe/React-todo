@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { categoryState } from "./atoms";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -18,20 +18,8 @@ const KanbanLayout = styled.section`
   left: 0;
 `;
 
-const AddAnotherBoard = styled.div`
-  display: flex;
-  align-items: start;
-  justify-content: center;
-  width: 30rem;
-  height: 6rem;
-  background-color: #4aa77d;
-  border-radius: 0.5rem;
-  margin: 0rem 3rem 0rem 3rem;
-`;
-
 const Boards: React.FC = () => {
   const categories = useRecoilValue(categoryState);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
   return (
     <KanbanLayout>
       {categories.map((category) => (
